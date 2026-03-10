@@ -1,0 +1,116 @@
+<Manager>:
+    LoginScreen:
+        name: 'login'
+    SignupScreen:
+        name: 'signup'
+    HomeScreen:
+        name: 'home'
+
+<LoginScreen>:
+    MDCard:
+        size_hint: 0.85, None
+        height: self.minimum_height
+        width: min(dp(400), root.width * 0.85)
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        padding: dp(25)
+        spacing: dp(15)
+        radius: [dp(20),]
+
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            adaptive_height: True
+            spacing: dp(20)
+
+            MDLabel:
+                text: "Login"
+                halign: "center"
+                font_style: "H5"
+                bold: True
+                adaptive_height: True
+
+            MDTextField:
+                id: email
+                mode: "rectangle"
+                hint_text: "Email"
+                size_hint_x: 1
+
+            MDTextField:
+                id: password
+                mode: "rectangle"
+                hint_text: "Senha"
+                password: True
+                size_hint_x: 1
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(20)
+                padding: dp(20)
+                pos_hint: {"y": 0}
+
+                MDFlatButton:
+                    text: 'Criar conta'
+                    size_hint_x: 1
+                    on_release: app.root.current = 'signup'
+
+                MDRaisedButton:
+                    text: "Entrar"
+                    size_hint_x: 1
+                    on_release: root.LoginValidation(email.text,password.text)
+
+<SignupScreen>:
+    MDCard:
+        size_hint: 0.85, None
+        height: self.minimum_height
+        width: min(dp(400), root.width * 0.85)
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        padding: dp(25)
+        spacing: dp(15)
+        radius: [dp(20),]
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            adaptive_height: True
+            spacing: dp(20)
+
+            MDLabel:
+                text: "Cadastro"
+                halign: "center"
+                font_style: "H5"
+                bold: True
+                adaptive_height: True
+
+            MDTextField:
+                id: email
+                mode: "rectangle"
+                hint_text: "Email"
+                size_hint_x: 1
+
+            MDTextField:
+                id: password
+                mode: "rectangle"
+                hint_text: "Senha"
+                password: True
+                size_hint_x: 1
+            MDRaisedButton: 
+                text: "Entrar"
+                size_hint_x: 1
+                on_release: root.SignupValidation(email.text,password.text)
+
+<HomeScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            id: appbar
+            title: ''
+            pos_hint: {"top": 1}
+            right_action_items: [["logout", lambda x: root.logout()]]
+        ScrollView:
+            MDList:
+                id: task_list  
+    MDIconButton:
+        icon: "plus"
+        pos_hint: {"right": 0.95, "y": 0.05}
+        on_release: root.add_task_form()
