@@ -1,11 +1,11 @@
+from kivymd.uix.bottomsheet.bottomsheet import MDLabel
 from kivy.uix.screenmanager import Screen
-from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import OneLineAvatarIconListItem
 from services import get_usuarios,post_usuario,get_tarefas,post_tarefa
-from components import DialogContent,ErrorDialog
+from components import DialogContent,ErrorDialog,DialogContentTask
 
 
 class LoginScreen(Screen):
@@ -29,7 +29,6 @@ class LoginScreen(Screen):
 
         ErrorDialog("Email ou senha incorretos").open()
 
-
 class SignupScreen(Screen):
 
     def SignupValidation(self, email, password):
@@ -40,13 +39,7 @@ class SignupScreen(Screen):
         else:
             ErrorDialog("Erro ao cadastrar").open()
 
-            
-
-
 class HomeScreen(Screen):
-
-    user_email = StringProperty("")
-
     def carregar_tarefas(self):
 
         app = MDApp.get_running_app()
@@ -60,18 +53,24 @@ class HomeScreen(Screen):
 
                 self.ids.task_list.add_widget(
                     OneLineAvatarIconListItem(
-                        text=tarefa["titulo"]
-                    )
+                        text=tarefa["titulo"],
+                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"], tarefa_id=id: DialogContentTask(titulo=titulo, descricao=descricao,tarefa_id=tarefa_id,user_id=app.user_id).open()                    )
                 )
+        else:
+            self.ids.task_list.clear_widgets()
+            self.ids.task_list.add_widget(
+                MDLabel(
+                    text='Não foi encontrado nem uma tarefa'
+                )
+            )
+
+
 
     def on_enter(self, *args):
 
         app = MDApp.get_running_app()
 
         if app.user:
-
-            self.user_email = app.user["email"]
-            self.ids.appbar.title = self.user_email
 
             self.carregar_tarefas()
 

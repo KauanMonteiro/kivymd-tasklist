@@ -30,3 +30,7 @@ def get_tarefas(user_id):
 def post_tarefa(user_id, tarefa):
     response = requests.post(f"{FIREBASE_URL}/Tarefas/{user_id}.json", json=tarefa)
     return response.ok
+
+def delete_tarefa(user_id,tarefa_id):
+    response = requests.delete(f"{FIREBASE_URL}/Tarefas/{user_id}/{tarefa_id}.json")
+    return response.ok
