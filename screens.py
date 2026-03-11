@@ -64,8 +64,6 @@ class HomeScreen(Screen):
                 )
             )
 
-
-
     def on_enter(self, *args):
 
         app = MDApp.get_running_app()
