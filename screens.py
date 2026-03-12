@@ -53,7 +53,7 @@ class HomeScreen(Screen):
                 self.ids.task_list.add_widget(
                     OneLineAvatarIconListItem(
                         text=tarefa["titulo"],
-                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"], tarefa_id=id: DialogContentTask(titulo=titulo, descricao=descricao,tarefa_id=tarefa_id,user_id=app.user_id).open()                    )
+                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"],prazo=tarefa["prazo"], tarefa_id=id: DialogContentTask(titulo=titulo, descricao=descricao,tarefa_id=tarefa_id,prazo=prazo,user_id=app.user_id).open()                    )
                 )
         else:
             self.ids.task_list.clear_widgets()
@@ -95,6 +95,7 @@ class HomeScreen(Screen):
                     on_release=lambda x: self.add_task(
                         self.dialogcontent.titulo_field.text,
                         self.dialogcontent.descricao_field.text,
+                        self.dialogcontent.prazo_field.text,
                     ),
                 )
             ],
@@ -102,11 +103,12 @@ class HomeScreen(Screen):
 
         self.form.open()
 
-    def add_task(self, titulo, descricao):
+    def add_task(self, titulo, descricao,prazo):
 
         tarefa = {
             "titulo": titulo,
             "descricao": descricao,
+            "prazo":prazo
         }
 
         app = MDApp.get_running_app()
