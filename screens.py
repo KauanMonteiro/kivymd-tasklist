@@ -6,18 +6,18 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import OneLineAvatarIconListItem
 from services import get_usuarios,post_usuario,get_tarefas,post_tarefa
 from components import DialogContent,ErrorDialog,DialogContentTask
-
+from utils import hash_password
 
 class LoginScreen(Screen):
 
     def LoginValidation(self, email, password):
 
         usuarios = get_usuarios()
+        password_hash = hash_password(password)
 
         if usuarios:
             for id, usuario in usuarios.items():
-
-                if usuario["email"] == email and usuario["password"] == password:
+                if usuario["email"] == email and usuario["password"] == password_hash:
 
                     app = MDApp.get_running_app()
 
@@ -32,10 +32,9 @@ class LoginScreen(Screen):
 class SignupScreen(Screen):
 
     def SignupValidation(self, email, password):
-
-        if post_usuario(email, password):
+        password_hash = hash_password(password)
+        if post_usuario(email, password_hash):
             self.manager.current = "login"
-
         else:
             ErrorDialog("Erro ao cadastrar").open()
 
