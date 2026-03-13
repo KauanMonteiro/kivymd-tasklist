@@ -35,7 +35,7 @@ def delete_tarefa(user_id,tarefa_id):
     response = requests.delete(f"{FIREBASE_URL}/Tarefas/{user_id}/{tarefa_id}.json")
     return response.ok
 
-def editar_task(tarefa_id,user_id,titulo,descricao,prazo):
-    data = {"titulo": titulo,"descricao": descricao,"prazo":prazo}
-    response = requests.patch(f'{FIREBASE_URL}/Tarefas/{user_id}/{tarefa_id}.json',json=data)
+def editar_task(tarefa_id, user_id, titulo, descricao, prazo, concluida=False):
+    data = {"titulo": titulo, "descricao": descricao, "prazo": prazo, "concluida": concluida}
+    response = requests.patch(f'{FIREBASE_URL}/Tarefas/{user_id}/{tarefa_id}.json', json=data)
     return response.ok

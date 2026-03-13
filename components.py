@@ -5,7 +5,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
 from services import delete_tarefa,editar_task
-from kivymd.uix.pickers import MDTimePicker
+from kivymd.uix.pickers import MDTimePicker,MDDatePicker
 
 class DialogContent(MDBoxLayout):
 
@@ -29,22 +29,29 @@ class DialogContent(MDBoxLayout):
         )
 
         self.prazo_field = MDRaisedButton(
-            text=prazo if prazo else "Selecionar horário",
-            on_release=self.show_time_picker 
-        )
+            text=prazo if prazo else "Selecionar data e horário",
+            on_release=self.show_date_picker
+            )
 
         self.add_widget(self.titulo_field)
         self.add_widget(self.descricao_field)
         self.add_widget(self.prazo_field)
 
-    def show_time_picker(self, instance):
+    def show_date_picker(self, instance):
+        self.date_picker = MDDatePicker()
+        self.date_picker.bind(on_save=self.on_date_selected)
+        self.date_picker.open()
+
+    def on_date_selected(self, instance, value, date_range):
+        self.selected_date = value  # guarda a data
+        # abre o time picker logo depois
         self.time_picker = MDTimePicker()
         self.time_picker.bind(time=self.on_time_selected)
         self.time_picker.open()
 
     def on_time_selected(self, instance, time):
-        self.prazo_field.text = time.strftime("%H:%M")
-
+        data_hora = f"{self.selected_date.strftime('%d/%m/%Y')} {time.strftime('%H:%M')}"
+        self.prazo_field.text = data_hora
 
 class ErrorDialog(MDDialog):
 

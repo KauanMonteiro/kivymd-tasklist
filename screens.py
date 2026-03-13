@@ -3,8 +3,8 @@ from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-from kivymd.uix.list import OneLineAvatarIconListItem
-from services import get_usuarios,post_usuario,get_tarefas,post_tarefa
+from kivymd.uix.list import OneLineAvatarIconListItem,IconRightWidget
+from services import get_usuarios,post_usuario,get_tarefas,post_tarefa,editar_task
 from components import DialogContent,ErrorDialog,DialogContentTask
 from utils import hash_password
 
@@ -43,18 +43,31 @@ class HomeScreen(Screen):
 
         app = MDApp.get_running_app()
         tarefas = get_tarefas(app.user_id)
-
         if tarefas:
-
             self.ids.task_list.clear_widgets()
-
             for id, tarefa in tarefas.items():
-
-                self.ids.task_list.add_widget(
-                    OneLineAvatarIconListItem(
+                if not tarefa['concluida']:
+                    item = OneLineAvatarIconListItem(
                         text=tarefa["titulo"],
-                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"],prazo=tarefa["prazo"], tarefa_id=id: DialogContentTask(titulo=titulo, descricao=descricao,tarefa_id=tarefa_id,prazo=prazo,user_id=app.user_id).open()                    )
-                )
+                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"],
+                            prazo=tarefa["prazo"], tarefa_id=id: DialogContentTask(
+                                titulo=titulo, descricao=descricao,
+                                tarefa_id=tarefa_id, prazo=prazo,
+                                user_id=app.user_id
+                            ).open()
+                    )
+
+                    icon_widget = IconRightWidget(
+                        icon="check",
+                        on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"],
+                            prazo=tarefa["prazo"], tarefa_id=id: self.concluir_tarefa(
+                                titulo=titulo, descricao=descricao,
+                                tarefa_id=tarefa_id, prazo=prazo,
+                                
+                            )
+                    )
+                    item.add_widget(icon_widget)
+                    self.ids.task_list.add_widget(item)
         else:
             self.ids.task_list.clear_widgets()
             self.ids.task_list.add_widget(
@@ -73,6 +86,15 @@ class HomeScreen(Screen):
 
         else:
             self.manager.current = "login"
+
+    def concluir_tarefa(self, tarefa_id, titulo, descricao, prazo):
+        app = MDApp.get_running_app()
+        editar_task(
+            tarefa_id=tarefa_id, user_id=app.user_id,
+            titulo=titulo, descricao=descricao,
+            prazo=prazo, concluida=True
+        )
+        self.carregar_tarefas()  
 
     def logout(self):
 
@@ -108,7 +130,8 @@ class HomeScreen(Screen):
         tarefa = {
             "titulo": titulo,
             "descricao": descricao,
-            "prazo":prazo
+            "prazo":prazo,
+            "concluida":False
         }
 
         app = MDApp.get_running_app()
