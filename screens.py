@@ -5,8 +5,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import OneLineAvatarIconListItem,IconRightWidget
 from services import get_usuarios,post_usuario,get_tarefas,post_tarefa,editar_task
-from components import DialogContent,ErrorDialog,DialogContentTask
-from utils import hash_password
+from utils import hash_password, create_tarefa_payload
+from components import DialogContent, ErrorDialog, DialogContentTask, AddTaskDialog
 
 class LoginScreen(Screen):
 
@@ -37,10 +37,8 @@ class SignupScreen(Screen):
             self.manager.current = "login"
         else:
             ErrorDialog("Erro ao cadastrar").open()
-
 class HomeScreen(Screen):
     def carregar_tarefas(self):
-
         app = MDApp.get_running_app()
         tarefas = get_tarefas(app.user_id)
         if tarefas:
@@ -70,76 +68,37 @@ class HomeScreen(Screen):
                     self.ids.task_list.add_widget(item)
         else:
             self.ids.task_list.clear_widgets()
-            self.ids.task_list.add_widget(
-                MDLabel(
-                    text='Não foi encontrado nem uma tarefa'
-                )
-            )
+            self.ids.task_list.add_widget(MDLabel(text='Não foi encontrado nem uma tarefa'))
+
+    def _on_task_release(self, tarefa, tarefa_id):
+        app = MDApp.get_running_app()
+        DialogContentTask(
+            titulo=tarefa["titulo"],
+            descricao=tarefa["descricao"],
+            prazo=tarefa["prazo"],
+            tarefa_id=tarefa_id,
+            user_id=app.user_id
+        ).open()
 
     def on_enter(self, *args):
-
         app = MDApp.get_running_app()
-
         if app.user:
-
             self.carregar_tarefas()
-
         else:
             self.manager.current = "login"
 
-    def concluir_tarefa(self, tarefa_id, titulo, descricao, prazo):
-        app = MDApp.get_running_app()
-        editar_task(
-            tarefa_id=tarefa_id, user_id=app.user_id,
-            titulo=titulo, descricao=descricao,
-            prazo=prazo, concluida=True
-        )
-        self.carregar_tarefas()  
-
     def logout(self):
-
         app = MDApp.get_running_app()
         app.user = None
-
         self.manager.current = "login"
 
     def add_task_form(self):
+        AddTaskDialog(on_save=self.add_task).open()
 
-        self.dialogcontent = DialogContent()
-
-        self.form = MDDialog(
-            title="Adicionar Tarefa",
-            type="custom",
-            content_cls=self.dialogcontent,
-            buttons=[
-                MDFlatButton(
-                    text="Salvar",
-                    on_release=lambda x: self.add_task(
-                        self.dialogcontent.titulo_field.text,
-                        self.dialogcontent.descricao_field.text,
-                        self.dialogcontent.prazo_field.text,
-                    ),
-                )
-            ],
-        )
-
-        self.form.open()
-
-    def add_task(self, titulo, descricao,prazo):
-
-        tarefa = {
-            "titulo": titulo,
-            "descricao": descricao,
-            "prazo":prazo,
-            "concluida":False
-        }
-
+    def add_task(self, titulo, descricao, prazo):
         app = MDApp.get_running_app()
-
+        tarefa = create_tarefa_payload(titulo, descricao, prazo)
         if post_tarefa(app.user_id, tarefa):
-
             self.carregar_tarefas()
-            self.form.dismiss()
-
         else:
             ErrorDialog("Erro ao cadastrar").open()

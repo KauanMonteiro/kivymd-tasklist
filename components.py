@@ -134,3 +134,27 @@ class EditarTask(MDDialog):
             **kwargs
         )
 
+class AddTaskDialog(MDDialog):
+    def __init__(self, on_save, **kwargs):
+        self.dialog_content = DialogContent()
+        self.on_save_callback = on_save
+        super().__init__(
+            title="Adicionar Tarefa",
+            type="custom",
+            content_cls=self.dialog_content,
+            buttons=[
+                MDFlatButton(
+                    text="Salvar",
+                    on_release=self._on_save
+                )
+            ],
+            **kwargs
+        )
+
+    def _on_save(self, *args):
+        self.on_save_callback(
+            self.dialog_content.titulo_field.text,
+            self.dialog_content.descricao_field.text,
+            self.dialog_content.prazo_field.text,
+        )
+        self.dismiss()
