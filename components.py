@@ -100,7 +100,7 @@ class DialogContentTask(MDDialog):
 
 class EditarTask(MDDialog):
 
-    def __init__(self, titulo, descricao,prazo, tarefa_id, user_id, **kwargs):
+    def __init__(self, titulo, descricao,prazo, tarefa_id, user_id,prazo_vencido=None, **kwargs):
 
         app = MDApp.get_running_app()
 

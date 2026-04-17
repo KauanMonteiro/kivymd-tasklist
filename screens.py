@@ -1,12 +1,10 @@
 from kivymd.uix.bottomsheet.bottomsheet import MDLabel
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import OneLineAvatarIconListItem,IconRightWidget
-from services import get_usuarios,post_usuario,get_tarefas,post_tarefa,editar_task
+from services import get_usuarios,post_usuario,get_tarefas,post_tarefa
 from utils import hash_password, create_tarefa_payload
-from components import DialogContent, ErrorDialog, DialogContentTask, AddTaskDialog
+from components import ErrorDialog, DialogContentTask, AddTaskDialog,editar_task
 
 class LoginScreen(Screen):
 
@@ -37,6 +35,7 @@ class SignupScreen(Screen):
             self.manager.current = "login"
         else:
             ErrorDialog("Erro ao cadastrar").open()
+            
 class HomeScreen(Screen):
     def carregar_tarefas(self):
         app = MDApp.get_running_app()
@@ -44,7 +43,7 @@ class HomeScreen(Screen):
         if tarefas:
             self.ids.task_list.clear_widgets()
             for id, tarefa in tarefas.items():
-                if not tarefa['concluida']:
+                if not tarefa['concluida'] and not tarefa['prazo_vencido']:
                     item = OneLineAvatarIconListItem(
                         text=tarefa["titulo"],
                         on_release=lambda x, titulo=tarefa["titulo"], descricao=tarefa["descricao"],
@@ -86,7 +85,14 @@ class HomeScreen(Screen):
             self.carregar_tarefas()
         else:
             self.manager.current = "login"
-
+    def concluir_tarefa(self, tarefa_id, titulo, descricao, prazo):
+        app = MDApp.get_running_app()
+        editar_task(
+            tarefa_id=tarefa_id, user_id=app.user_id,
+            titulo=titulo, descricao=descricao,
+            prazo=prazo, concluida=True,
+        )
+        self.carregar_tarefas() 
     def logout(self):
         app = MDApp.get_running_app()
         app.user = None
