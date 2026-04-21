@@ -1,8 +1,8 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
-from screens import LoginScreen, SignupScreen, HomeScreen
+from screens import LoginScreen, SignupScreen, HomeScreen,AtrasadasScreen,ConcluidasScreen
 from kivy.clock import Clock
-from utils import verificar_prazo
+from utils import verificar_prazo,carregar_tarefas
 from services import get_tarefas
 class Manager(ScreenManager):
     pass
@@ -21,6 +21,8 @@ class MainApp(MDApp):
         sm.add_widget(LoginScreen(name="login"))
         sm.add_widget(SignupScreen(name="signup"))
         sm.add_widget(HomeScreen(name="home"))
+        sm.add_widget(AtrasadasScreen(name='atrasadas'))
+        sm.add_widget(ConcluidasScreen(name=''))
 
         return sm
     def on_start(self):
@@ -42,7 +44,16 @@ class MainApp(MDApp):
                 tarefa.get("concluida", False),
                 tarefa.get("prazo_vencido", False),
             )
-        home_screen = self.root.get_screen("home")
-        home_screen.carregar_tarefas()
+        if self.root.current == 'home':
+            screen = self.root.get_screen('home')
+            carregar_tarefas(screen, concluida=False, prazo_vencido=False, deletada=False)
+
+        if self.root.current == 'atrasadas':
+            screen = self.root.get_screen('atrasadas')
+            carregar_tarefas(screen, concluida=False, prazo_vencido=True, deletada=False)
+
+        if self.root.current == 'concluidas':
+            screen = self.root.get_screen('concluidas')
+            carregar_tarefas(screen, concluida=True, deletada=False)
 if __name__ == "__main__":
     MainApp().run()

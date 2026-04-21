@@ -6,7 +6,6 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
 from services import delete_tarefa,editar_task
 from kivymd.uix.pickers import MDTimePicker,MDDatePicker
-
 class DialogContent(MDBoxLayout):
 
     def __init__(self, titulo="", descricao="",prazo="", **kwargs):
@@ -71,6 +70,8 @@ class ErrorDialog(MDDialog):
 
 class DialogContentTask(MDDialog):
     def __init__(self,titulo,descricao,prazo,tarefa_id,user_id,**kwargs):
+        from utils import carregar_tarefas
+
         app = MDApp.get_running_app()
         if prazo:
             fulltext= f'{descricao}\nPrazo:{prazo}'
@@ -88,7 +89,7 @@ class DialogContentTask(MDDialog):
                 MDIconButton(
                     icon='trash-can',
                     md_bg_color=app.theme_cls.primary_color,
-                    on_release=lambda x: (delete_tarefa(tarefa_id=tarefa_id, user_id=user_id), self.dismiss(),app.root.get_screen('home').carregar_tarefas())
+                    on_release=lambda x: (delete_tarefa(tarefa_id=tarefa_id, user_id=user_id), self.dismiss(),app.root.get_screen(app.root.current).reload())
                 ),
                 MDIconButton(
                     icon='close',
@@ -101,7 +102,7 @@ class DialogContentTask(MDDialog):
 class EditarTask(MDDialog):
 
     def __init__(self, titulo, descricao,prazo, tarefa_id, user_id,prazo_vencido=None, **kwargs):
-
+        from utils import carregar_tarefas
         app = MDApp.get_running_app()
 
         self.dialogcontent = DialogContent(
@@ -127,7 +128,7 @@ class EditarTask(MDDialog):
 
                         ),
                         self.dismiss(),
-                        app.root.get_screen('home').carregar_tarefas()
+                        app.root.get_screen(app.root.current).reload()
                     )
                 )
             ],

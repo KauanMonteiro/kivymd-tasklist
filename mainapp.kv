@@ -5,6 +5,10 @@
         name: 'signup'
     HomeScreen:
         name: 'home'
+    AtrasadasScreen:
+        name: 'atrasadas'
+    ConcluidasScreen:
+        name: 'concluidas'
 
 <LoginScreen>:
     MDCard:
@@ -99,6 +103,8 @@
                 size_hint_x: 1
                 on_release: root.SignupValidation(email.text,password.text)
 
+
+
 <HomeScreen>:
     MDBoxLayout:
         orientation: "vertical"
@@ -107,11 +113,106 @@
             title: 'Home'
             pos_hint: {"top": 1}
             right_action_items: [["logout", lambda x: root.logout()]]
-            left_action_items: [["menu"]]
+            left_action_items: [["menu", lambda x: nav_drawer.set_state("toggle")]]
         ScrollView:
             MDList:
-                id: task_list  
+                id: task_list
     MDIconButton:
         icon: "plus"
         pos_hint: {"right": 0.95, "y": 0.05}
         on_release: root.add_task_form()
+    
+    MDNavigationDrawer:
+        id: nav_drawer
+        anchor: "left"
+        drawer_type: "modal"
+
+        MDNavigationDrawerMenu:
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "Atrasadas"
+                icon: "clock-alert-outline"
+                on_release: app.root.current = 'atrasadas'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "Concluidas"
+                icon: "check-circle-outline"
+                on_release: app.root.current = 'concluidas'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                icon: "trash-can-outline"
+                text: "Lixeira"
+
+<AtrasadasScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            id: appbar
+            title: 'AtrasadasScreen'
+            pos_hint: {"top": 1}
+            left_action_items: [["menu", lambda x: nav_drawer.set_state("toggle")]]
+        ScrollView:
+            MDList:
+                id: task_list
+    MDNavigationDrawer:
+        id: nav_drawer
+        anchor: "left"
+        drawer_type: "modal"
+
+        MDNavigationDrawerMenu:
+            
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "home"
+                icon: "home-outline"
+                on_release: app.root.current = 'home'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "Concluidas"
+                icon: "check-circle-outline"
+                on_release: app.root.current = 'concluidas'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                icon: "trash-can-outline"
+                text: "Lixeira"
+
+<ConcluidasScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            id: appbar
+            title: 'ConcluidasScreen'
+            pos_hint: {"top": 1}
+            left_action_items: [["menu", lambda x: nav_drawer.set_state("toggle")]]
+        ScrollView:
+            MDList:
+                id: task_list
+    MDNavigationDrawer:
+        id: nav_drawer
+        anchor: "left"
+        drawer_type: "modal"
+
+        MDNavigationDrawerMenu:
+            
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "home"
+                icon: "home-outline"
+                on_release: app.root.current = 'home'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "Atrasadas"
+                icon: "check-circle-outline"
+                on_release: app.root.current = 'atrasadas'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                icon: "trash-can-outline"
+                text: "Lixeira"
+
