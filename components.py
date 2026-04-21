@@ -125,7 +125,6 @@ class EditarTask(MDDialog):
                             self.dialogcontent.titulo_field.text,
                             self.dialogcontent.descricao_field.text,
                             self.dialogcontent.prazo_field.text,
-
                         ),
                         self.dismiss(),
                         app.root.get_screen(app.root.current).reload()
@@ -134,7 +133,6 @@ class EditarTask(MDDialog):
             ],
             **kwargs
         )
-
 class AddTaskDialog(MDDialog):
     def __init__(self, on_save, **kwargs):
         self.dialog_content = DialogContent()

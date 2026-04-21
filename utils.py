@@ -6,6 +6,7 @@ from kivymd.uix.bottomsheet.bottomsheet import MDLabel
 from kivymd.uix.list import OneLineAvatarIconListItem,IconRightWidget
 from services import get_tarefas
 from components import DialogContentTask,editar_task
+from notificacoes import enviar_notificacao
 def hash_password(password):
     hash_password = hashlib.sha256(password.encode()).hexdigest()
     return hash_password
@@ -29,17 +30,27 @@ def verificar_prazo(tarefa_id, user_id, titulo, descricao, prazo, concluida, pra
         return
 
     agora = datetime.now()
+    diferenca = data_prazo - agora
+    minutos = diferenca.total_seconds() / 60
+    app = MDApp.get_running_app()
 
     if agora > data_prazo:
-        return editar_task(
-            tarefa_id,
-            user_id,
-            titulo,
-            descricao,
-            prazo,
-            concluida = False,
-            prazo_vencido=True
-        )
+        chave = f"{tarefa_id}_atrasada"
+        if chave not in app.notificacoes_enviadas:
+            enviar_notificacao(titulo="Tarefa atrasada", mensagem=f"{titulo} está atrasada!")
+            app.notificacoes_enviadas.add(chave)
+
+    elif 0 < minutos <= 15:
+        chave = f"{tarefa_id}_15min"
+        if chave not in app.notificacoes_enviadas:
+            enviar_notificacao(titulo="Lembrete de tarefa", mensagem=f"{titulo} vence em 15 minutos!")
+            app.notificacoes_enviadas.add(chave)
+
+    elif 15 < minutos <= 30:
+        chave = f"{tarefa_id}_30min"
+        if chave not in app.notificacoes_enviadas:
+            enviar_notificacao(titulo="Lembrete de tarefa", mensagem=f"{titulo} vence em 30 minutos!")
+            app.notificacoes_enviadas.add(chave)
     else:
         return False
     

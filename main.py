@@ -15,14 +15,14 @@ class MainApp(MDApp):
 
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Pink"
-
+        self.notificacoes_enviadas = set()
         sm = Manager()
 
         sm.add_widget(LoginScreen(name="login"))
         sm.add_widget(SignupScreen(name="signup"))
         sm.add_widget(HomeScreen(name="home"))
         sm.add_widget(AtrasadasScreen(name='atrasadas'))
-        sm.add_widget(ConcluidasScreen(name=''))
+        sm.add_widget(ConcluidasScreen(name='concluidas'))
 
         return sm
     def on_start(self):
