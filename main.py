@@ -4,6 +4,7 @@ from screens import LoginScreen, SignupScreen, HomeScreen,AtrasadasScreen,Conclu
 from kivy.clock import Clock
 from utils import verificar_prazo,carregar_tarefas
 from services import get_tarefas
+
 class Manager(ScreenManager):
     pass
 

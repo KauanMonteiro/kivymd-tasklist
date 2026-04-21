@@ -1,39 +1,9 @@
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
-from services import get_usuarios,post_usuario,post_tarefa
-from utils import hash_password, create_tarefa_payload,carregar_tarefas
-from components import ErrorDialog, DialogContentTask, AddTaskDialog,editar_task
+from services import post_tarefa,editar_task
+from utils import  create_tarefa_payload,carregar_tarefas
+from components import ErrorDialog, DialogContentTask, AddTaskDialog
 
-class LoginScreen(Screen):
-
-    def LoginValidation(self, email, password):
-
-        usuarios = get_usuarios()
-        password_hash = hash_password(password)
-
-        if usuarios:
-            for id, usuario in usuarios.items():
-                if usuario["email"] == email and usuario["password"] == password_hash:
-
-                    app = MDApp.get_running_app()
-
-                    app.user = usuario
-                    app.user_id = id
-
-                    self.manager.current = "home"
-                    return
-
-        ErrorDialog("Email ou senha incorretos").open()
-
-class SignupScreen(Screen):
-
-    def SignupValidation(self, email, password):
-        password_hash = hash_password(password)
-        if post_usuario(email, password_hash):
-            self.manager.current = "login"
-        else:
-            ErrorDialog("Erro ao cadastrar").open()
-            
 class HomeScreen(Screen):
 
     def _on_task_release(self, tarefa, tarefa_id):
