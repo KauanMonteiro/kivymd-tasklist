@@ -95,3 +95,25 @@ class ConcluidasScreen(Screen):
             return
 
         carregar_tarefas(self, concluida=True,deletada=False)
+
+
+class DeletadasScreen(Screen):
+    def _on_task_release(self, tarefa, tarefa_id):
+        app = MDApp.get_running_app()
+        DialogContentTask(
+            titulo=tarefa["titulo"],
+            descricao=tarefa["descricao"],
+            prazo=tarefa["prazo"],
+            tarefa_id=tarefa_id,
+            user_id=app.user_id
+        ).open()
+    def reload(self):
+        carregar_tarefas(self,deletada=True)
+    def on_enter(self, *args):
+        app = MDApp.get_running_app()
+        
+        if not app.user:
+            self.manager.current = "login"
+            return
+
+        carregar_tarefas(self,deletada=True)

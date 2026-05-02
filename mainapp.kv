@@ -9,6 +9,8 @@
         name: 'atrasadas'
     ConcluidasScreen:
         name: 'concluidas'
+    DeletadasScreen:
+        name: 'deletadas'
 
 <LoginScreen>:
     MDCard:
@@ -145,6 +147,7 @@
                 text_color:1, 1, 1, 1
                 icon: "trash-can-outline"
                 text: "Lixeira"
+                on_release: app.root.current = 'deletadas'
 
 <AtrasadasScreen>:
     MDBoxLayout:
@@ -180,6 +183,7 @@
                 text_color:1, 1, 1, 1
                 icon: "trash-can-outline"
                 text: "Lixeira"
+                on_release: app.root.current = 'deletadas'
 
 <ConcluidasScreen>:
     MDBoxLayout:
@@ -215,4 +219,39 @@
                 text_color:1, 1, 1, 1
                 icon: "trash-can-outline"
                 text: "Lixeira"
+                on_release: app.root.current = 'deletadas'
+<DeletadasScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            id: appbar
+            title: 'DeletadasScreen'
+            pos_hint: {"top": 1}
+            left_action_items: [["menu", lambda x: nav_drawer.set_state("toggle")]]
+        ScrollView:
+            MDList:
+                id: task_list
+    MDNavigationDrawer:
+        id: nav_drawer
+        anchor: "left"
+        drawer_type: "modal"
 
+        MDNavigationDrawerMenu:
+            
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "home"
+                icon: "home-outline"
+                on_release: app.root.current = 'home'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                text: "Atrasadas"
+                icon: "check-circle-outline"
+                on_release: app.root.current = 'atrasadas'
+
+            MDNavigationDrawerItem:
+                text_color:1, 1, 1, 1
+                icon: "trash-can-outline"
+                text: "Lixeira"
+                on_release: app.root.current = 'concluidas'

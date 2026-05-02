@@ -4,7 +4,7 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.app import MDApp
-from services import delete_tarefa
+from services import delete_tarefa,soft_delete_tarefa
 from kivymd.uix.pickers import MDTimePicker,MDDatePicker
 from .tasks import EditarTask
 
@@ -91,7 +91,7 @@ class DialogContentTask(MDDialog):
                 MDIconButton(
                     icon='trash-can',
                     md_bg_color=app.theme_cls.primary_color,
-                    on_release=lambda x: (delete_tarefa(tarefa_id=tarefa_id, user_id=user_id), self.dismiss(),app.root.get_screen(app.root.current).reload())
+                    on_release=lambda x: (soft_delete_tarefa(tarefa_id=tarefa_id, user_id=user_id), self.dismiss(), app.root.get_screen(app.root.current).reload())
                 ),
                 MDIconButton(
                     icon='close',

@@ -5,7 +5,7 @@ from services import editar_task
 
 class EditarTask(MDDialog):
 
-    def __init__(self, titulo, descricao,prazo, tarefa_id, user_id,prazo_vencido=None, **kwargs):
+    def __init__(self, titulo, descricao,prazo, tarefa_id, user_id,prazo_vencido=None,deletado=False, **kwargs):
         from .dialogs import DialogContent
 
         app = MDApp.get_running_app()

@@ -10,9 +10,10 @@ def create_tarefa_payload(titulo, descricao, prazo):
         "descricao": descricao,
         "prazo": prazo,
         "concluida": False,
-        "prazo_vencido": False
+        "prazo_vencido": False,
+        "deletada": False,  
+        "deletado_em": None,
     }
-
 def carregar_tarefas(self, concluida=None, prazo_vencido=None, deletada=None):
     app = MDApp.get_running_app()
     tarefas = get_tarefas(app.user_id)
@@ -32,6 +33,7 @@ def carregar_tarefas(self, concluida=None, prazo_vencido=None, deletada=None):
             continue
         if deletada is not None and tarefa.get('deletada', False) != deletada:
             continue
+
 
         item = OneLineAvatarIconListItem(
             text=tarefa["titulo"],
